@@ -7,7 +7,8 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\CategoryController;
-  
+use App\Http\Controllers\Admin\TransactionController;  
+
 Route::get('/tentang', function () {
     return '<h1>Ini adalah Halaman Tentang Aplikasi Event Hub</h1>';
 });
@@ -41,12 +42,17 @@ Route::get('/ticket', [TicketController::class, 'index'])->name('ticket');
 //Rute Admin Area
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
-    Route::get('/events', [AdminEventController::class, 'index'])->name('events');
+    Route::get('/events', [AdminEventController::class, 'index'])
+        ->name('events');
 
-    Route::get('/transactions', [AdminEventController::class, 'transactions'])->name('transactions');
+    // TRANSACTIONS
+    Route::get('/transactions', [TransactionController::class, 'index'])
+        ->name('transactions');
 
-    Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
+    Route::get('/categories', [CategoryController::class, 'index'])
+        ->name('categories');
 
 });
