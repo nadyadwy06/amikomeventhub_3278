@@ -18,4 +18,9 @@ class Transaction extends Model
         'snap_token',
 
     ];
+    // RELASI EVENT
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
 }

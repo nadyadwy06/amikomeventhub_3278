@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Models\Event;
 
 class TransactionController extends Controller
 {
@@ -13,20 +14,20 @@ class TransactionController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Transaction::query();
+        $query = Transaction::with('event');
 
         // SEARCH
-        if ($request->search) {
+        if ($request->filled('search')) {
             $query->where('customer_name', 'like', '%' . $request->search . '%')
                   ->orWhere('order_id', 'like', '%' . $request->search . '%');
         }
 
         // FILTER STATUS
-        if ($request->status) {
+        if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        $transactions = $query->latest()->get();
+        $transactions = Transaction::with('event')->latest()->get();
 
         return view('admin.transactions.index', compact('transactions'));
     }
@@ -36,45 +37,43 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        return view('admin.transactions.create');
+        $events = Event::all();
+
+        return view('admin.transactions.create', compact('events'));
     }
 
     /**
      * Simpan transaksi
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'customer_name'  => 'required',
-            'customer_email' => 'required|email',
-            'customer_phone' => 'required',
-            'total_price'    => 'required|numeric',
-            'status'         => 'required',
-        ]);
+   public function store(Request $request)
+{
+    $request->validate([
+        'event_id'       => 'required|exists:events,id',
+        'customer_name'  => 'required',
+        'customer_email' => 'required|email',
+        'customer_phone' => 'required',
+        'total_price'    => 'required|numeric',
+        'status'         => 'required',
+        
+    ]);
 
-        Transaction::create([
+    $event = Event::findOrFail($request->event_id);
+    // tabel events sudah ada data dengan ID = 1
+   Transaction::create([
+        'event_id' => $request->event_id,
+        'order_id' => uniqid(),
+        'customer_name' => $request->customer_name,
+        'customer_email' => $request->customer_email,
+        'customer_phone' => $request->customer_phone,
+        'total_price' => $request->total_price,
+        'status' => $request->status ?? 'Pending',
+        'snap_token' => null,
+    ]);
 
-            'event_id' => 1,
-
-            'order_id' => 'ORD-' . rand(1000,9999),
-
-            'customer_name' => $request->customer_name,
-
-            'customer_email' => $request->customer_email,
-
-            'customer_phone' => $request->customer_phone,
-
-            'total_price' => $request->total_price,
-
-            'status' => $request->status,
-
-            'snap_token' => '-',
-        ]);
-
-        return redirect()
-            ->route('admin.transactions.index')
-            ->with('success', 'Transaksi berhasil ditambahkan');
-    }
+    return redirect()
+        ->route('admin.transactions.index')
+        ->with('success', 'Transaksi berhasil ditambahkan');
+}
 
     /**
      * Form edit transaksi
@@ -83,7 +82,9 @@ class TransactionController extends Controller
     {
         $transaction = Transaction::findOrFail($id);
 
-        return view('admin.transactions.edit', compact('transaction'));
+         $events = Event::all();
+
+        return view('admin.transactions.edit', compact('transaction', 'events'));
     }
 
     /**

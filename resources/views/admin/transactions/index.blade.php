@@ -46,34 +46,40 @@
 
                 <tr>
 
+                    <!-- NO -->
                     <td class="px-6 py-4">
                         {{ $loop->iteration }}
                     </td>
 
+                    <!-- CUSTOMER -->
                     <td class="px-6 py-4">
                         <div>
                             <p class="font-semibold">
-                                {{ $transaction->name }}
+                                {{ $transaction->customer_name }}
                             </p>
 
                             <p class="text-xs text-slate-400">
-                                {{ $transaction->email }}
+                                {{ $transaction->customer_email }}
                             </p>
                         </div>
                     </td>
 
+                    <!-- EVENT (RELASI) -->
                     <td class="px-6 py-4">
-                        {{ $transaction->event_name }}
+                        {{ $transaction->event->title ?? 'Tidak ada event' }}
                     </td>
 
+                    <!-- STATUS -->
                     <td class="px-6 py-4">
                         {{ $transaction->status }}
                     </td>
 
+                    <!-- TOTAL -->
                     <td class="px-6 py-4">
                         Rp {{ number_format($transaction->total_price, 0, ',', '.') }}
                     </td>
 
+                    <!-- ACTION -->
                     <td class="px-6 py-4">
 
                         <div class="flex justify-center gap-2">

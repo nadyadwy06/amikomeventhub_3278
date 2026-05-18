@@ -120,17 +120,17 @@
 
                     <!-- NAMA -->
                     <td class="px-6 py-4 font-semibold text-slate-700">
-                        {{ $transaction->name }}
+                        {{ $transaction->customer_name }}
                     </td>
 
                     <!-- EMAIL -->
                     <td class="px-6 py-4 text-slate-500">
-                        {{ $transaction->email }}
+                        {{ $transaction->customer_email }}
                     </td>
 
                     <!-- EVENT -->
                     <td class="px-6 py-4 text-slate-700">
-                        {{ $transaction->event_name }}
+                        {{ $transaction->event->title ?? '-' }}
                     </td>
 
                     <!-- STATUS -->

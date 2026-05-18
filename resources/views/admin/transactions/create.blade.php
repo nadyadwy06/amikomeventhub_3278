@@ -10,63 +10,59 @@
 
     @csrf
 
+    <!-- NAMA -->
+    <input type="text" name="customer_name"
+           placeholder="Nama"
+           class="w-full border rounded-xl px-4 py-3"
+           required>
+
+    <!-- EMAIL -->
+    <input type="email" name="customer_email"
+           placeholder="Email"
+           class="w-full border rounded-xl px-4 py-3"
+           required>
+
+    <!-- EVENT -->
+    <select id="eventSelect"
+            name="event_id"
+            class="w-full border rounded-xl px-4 py-3"
+            required>
+
+        <option value="">Pilih Event</option>
+
+        @foreach($events as $event)
+            <option value="{{ $event->id }}"
+                    data-price="{{ $event->price }}">
+                {{ $event->title }}
+            </option>
+        @endforeach
+
+    </select>
+
+    <!-- HARGA TAMPIL (READONLY) -->
     <div>
         <label class="block mb-2 font-semibold">
-            Nama
+            Harga Event
         </label>
 
         <input type="text"
-               name="name"
-               class="w-full border rounded-xl px-4 py-3"
-               required>
+               id="priceDisplay"
+               class="w-full border rounded-xl px-4 py-3 bg-gray-100"
+               readonly
+               placeholder="Harga akan muncul otomatis">
     </div>
 
-    <div>
-        <label class="block mb-2 font-semibold">
-            Email
-        </label>
+    <!-- 🔥 HIDDEN INPUT UNTUK DATABASE -->
+    <input type="hidden" name="total_price" id="totalPrice">
 
-        <input type="email"
-               name="email"
-               class="w-full border rounded-xl px-4 py-3"
-               required>
-    </div>
+    <!-- STATUS -->
+    <select name="status"
+            class="w-full border rounded-xl px-4 py-3">
 
-    <div>
-        <label class="block mb-2 font-semibold">
-            Nama Event
-        </label>
+        <option value="Pending">Pending</option>
+        <option value="Success">Success</option>
 
-        <input type="text"
-               name="event_name"
-               class="w-full border rounded-xl px-4 py-3"
-               required>
-    </div>
-
-    <div>
-        <label class="block mb-2 font-semibold">
-            Status
-        </label>
-
-        <select name="status"
-                class="w-full border rounded-xl px-4 py-3">
-
-            <option value="Success">Success</option>
-            <option value="Pending">Pending</option>
-
-        </select>
-    </div>
-
-    <div>
-        <label class="block mb-2 font-semibold">
-            Total Harga
-        </label>
-
-        <input type="number"
-               name="total_price"
-               class="w-full border rounded-xl px-4 py-3"
-               required>
-    </div>
+    </select>
 
     <button type="submit"
             class="px-6 py-3 bg-indigo-600 text-white rounded-xl">
@@ -76,5 +72,26 @@
     </button>
 
 </form>
+
+<!-- SCRIPT AUTO PRICE -->
+<script>
+document.getElementById('eventSelect').addEventListener('change', function () {
+
+    let selected = this.options[this.selectedIndex];
+    let price = selected.getAttribute('data-price');
+
+    if (price) {
+        document.getElementById('priceDisplay').value =
+            'Rp ' + new Intl.NumberFormat('id-ID').format(price);
+
+        // 🔥 INI YANG KIRIM KE DATABASE
+        document.getElementById('totalPrice').value = price;
+    } else {
+        document.getElementById('priceDisplay').value = '';
+        document.getElementById('totalPrice').value = '';
+    }
+
+});
+</script>
 
 @endsection
