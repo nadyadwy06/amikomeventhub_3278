@@ -15,6 +15,7 @@ return new class extends Migration
         $table->id();
         $table->string('name');
         $table->string('logo'); // untuk menyimpan path gambar
+        $table->string('type');
         $table->timestamps();
     });
     }
@@ -24,6 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('partners');
+         Schema::table('partners', function (Blueprint $table) {
+            $table->dropColumn(['name', 'logo', 'type']);
+        });
     }
 };
