@@ -10,36 +10,29 @@ use App\Models\Transaction;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        // 1. Logika Pencarian
-        // Kita gunakan query builder untuk transaksi
-        $transactionsQuery = Transaction::with('event');
+    // Ambil transaksi terbaru dengan relasi event
+    $transactions = Transaction::with('event')->latest()->take(5)->get(); 
 
-        if ($request->has('search') && !empty($request->search)) {
-            $searchTerm = $request->search;
-            
-            $transactionsQuery->where('customer_name', 'like', '%' . $searchTerm . '%')
-                ->orWhereHas('event', function($q) use ($searchTerm) {
-                    $q->where('title', 'like', '%' . $searchTerm . '%');
-                });
-        }
+    // Total pendapatan (sum)
+    $totalRevenue = Transaction::where('status', 'success')->sum('total_price');
 
-        // Ambil data transaksi yang sudah difilter
-        $transactions = $transactionsQuery->latest()->take(10)->get(); 
+    // Total tiket (count)
+    $ticketSold = Transaction::where('status', 'success')->count();
 
-        // 2. Statistik (tetap gunakan total keseluruhan tanpa filter pencarian)
-        $totalRevenue = Transaction::where('status', 'success')->sum('total_price');
-        $ticketSold = Transaction::where('status', 'success')->count();
-        $eventCount = Event::count();
-        $pendingOrders = Transaction::whereRaw('LOWER(status) = ?', ['pending'])->count();
+    // Total event
+    $eventCount = Event::count();
 
-        return view('admin.dashboard', compact(
-            'transactions',
-            'totalRevenue',
-            'ticketSold',
-            'eventCount',
-            'pendingOrders'
-        ));
-    }
+    // Total pending (menggunakan case-insensitive)
+    $pendingOrders = Transaction::whereRaw('LOWER(status) = ?', ['pending'])->count();
+
+    return view('admin.dashboard', compact(
+        'transactions',
+        'totalRevenue',
+        'ticketSold',
+        'eventCount',
+        'pendingOrders'
+    ));
+}
 }
