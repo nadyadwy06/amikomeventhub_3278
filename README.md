@@ -73,5 +73,5 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 **Link Patner : [https://amikomeventhub-3278-main-8qrahl.free.laravel.cloud/admin/categories](https://amikomeventhub-3278-main-8qrahl.free.laravel.cloud/admin/partners**
 **Link Kategori : https://amikomeventhub-3278-main-8qrahl.free.laravel.cloud/admin/categories**
 **Link events: https://amikomeventhub-3278-main-8qrahl.free.laravel.cloud/admin/events**
-**Link Video Demo : https://drive.google.com/drive/folders/1twI2YHiqtL8GffzLJwCyKJV2zETExhiQ?usp=drive_link **
+**Link Video Demo : https://drive.google.com/drive/folders/1twI2YHiqtL8GffzLJwCyKJV2zETExhiQ?usp=drive_link**
 
