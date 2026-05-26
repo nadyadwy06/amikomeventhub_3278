@@ -6,22 +6,24 @@
 
 <!-- SEARCH BAR -->
 <div class="mb-6">
-    <div class="relative w-full md:w-96">
-
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-        </span>
-
-        <input type="text"
-            placeholder="Cari transaksi atau event..."
-            class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
-
-    </div>
+    <form action="{{ route('admin.dashboard') }}" method="GET" class="relative w-full md:w-96 flex gap-2">
+        <div class="relative flex-1">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </span>
+            <input type="text" 
+                   name="search" 
+                   value="{{ request('search') }}" 
+                   placeholder="Cari transaksi atau event..."
+                   class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
+        </div>
+        
+        <button type="submit" class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition">
+            Cari
+        </button>
+    </form>
 </div>
 
 <!-- STATISTICS -->
