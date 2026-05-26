@@ -20,9 +20,12 @@ class Event extends Model
     'stock',
     'poster_path'
     ];
-
+    
 
     public function category() {
         return $this->belongsTo(Category::class);
+    }
+    public function transactions() {
+    return $this->hasMany(Transaction::class);
     }
 }

@@ -1,9 +1,10 @@
-@extends('layouts.admin', ['title' => 'Tambah Event'])
+@extends('layouts.admin')
 
+@section('title', 'Tambah Event')
 
 @section('content')
 <header class="mb-10">
-    <h1 class="text-3xl font-black">Tambah Event</h1>
+
     <p class="text-slate-500 font-medium">Isi detail event baru dengan lengkap.</p>
 </header>
 

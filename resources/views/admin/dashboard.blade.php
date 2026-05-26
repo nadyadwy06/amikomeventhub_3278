@@ -184,60 +184,46 @@
             </thead>
 
             <tbody class="divide-y">
+            @forelse($transactions as $transaction)
+            <tr class="hover:bg-slate-50 transition">
+                
+                <td class="px-6 py-4 font-medium">
+                    {{ $transaction->customer_name }}
+                </td>
 
-                @forelse($transactions as $transaction)
+                <td class="px-6 py-4 text-slate-500">
+                    {{ $transaction->event->title ?? 'Event Tidak Ditemukan' }}
+                </td>
 
-                <tr class="hover:bg-slate-50 transition">
+                <td class="px-6 py-4">
+                    @if(strtolower($transaction->status) == 'success')
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                            Success
+                        </span>
+                    @elseif(strtolower($transaction->status) == 'pending')
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
+                            Pending
+                        </span>
+                    @else
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700">
+                            {{ $transaction->status }}
+                        </span>
+                    @endif
+                </td>
 
-                    <td class="px-6 py-4 font-medium">
-                        {{ $transaction->user->name }}
-                    </td>
+                <td class="px-6 py-4 font-semibold text-indigo-600">
+                    Rp {{ number_format($transaction->total_price, 0, ',', '.') }}
+                </td>
 
-                    <td class="px-6 py-4 text-slate-500">
-                        {{ $transaction->event->title }}
-                    </td>
-
-                    <td class="px-6 py-4">
-
-                        @if($transaction->status == 'Success')
-
-                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
-                                {{ $transaction->status }}
-                            </span>
-
-                        @elseif($transaction->status == 'Pending')
-
-                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
-                                {{ $transaction->status }}
-                            </span>
-
-                        @else
-
-                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700">
-                                {{ $transaction->status }}
-                            </span>
-
-                        @endif
-
-                    </td>
-
-                    <td class="px-6 py-4 font-semibold text-indigo-600">
-                        Rp {{ number_format($transaction->total, 0, ',', '.') }}
-                    </td>
-
-                </tr>
-
-                @empty
-
-                <tr>
-                    <td colspan="4" class="px-6 py-10 text-center text-slate-400">
-                        Belum ada transaksi
-                    </td>
-                </tr>
-
-                @endforelse
-
-            </tbody>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="4" class="px-6 py-10 text-center text-slate-400">
+                    Belum ada transaksi
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
 
         </table>
 

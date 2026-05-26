@@ -8,9 +8,6 @@
 
     <!-- Header -->
     <div class="mb-6">
-        <h1 class="text-3xl font-bold text-slate-800">
-            Tambah Kategori
-        </h1>
 
         <p class="text-slate-500 mt-1">
             Tambahkan kategori baru

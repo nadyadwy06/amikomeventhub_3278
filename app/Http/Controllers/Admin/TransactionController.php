@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Event;
+use Illuminate\Support\Str;
 
 class TransactionController extends Controller
 {
@@ -26,18 +27,37 @@ class TransactionController extends Controller
             ->get();
 
         return view('admin.transactions.index', compact('transactions'));
+
+        {
+        // Menghitung statistik
+        $totalRevenue = Transaction::where('status', 'success')->sum('total_price');
+        $ticketSold = Transaction::where('status', 'success')->count();
+        $eventCount = Event::count();
+        $pendingOrders = Transaction::where('status', 'pending')->count();
+
+        // Mengambil 5 transaksi terakhir
+        $transactions = Transaction::with('event')->latest()->take(5)->get();
+
+        return view('admin.dashboard', compact(
+            'totalRevenue', 
+            'ticketSold', 
+            'eventCount', 
+            'pendingOrders', 
+            'transactions'
+        ));
+    }
     }
 
     // =========================
-    // CREATE (INI YANG KAMU BILANG ERROR)
+    // CREATE
     // =========================
     public function create()
     {
-        // 🔥 WAJIB ADA INI
+
         $events = Event::all();
 
-        // 🔥 WAJIB KIRIM KE VIEW
-        return view('admin.transactions.create', compact('events'));
+            return view('admin.transactions.create', compact('events'));
+
     }
 
     // =========================
@@ -45,31 +65,74 @@ class TransactionController extends Controller
     // =========================
     public function store(Request $request)
     {
-        $request->validate([
+        // 1. Validasi
+        $validated = $request->validate([
             'event_id'       => 'required|exists:events,id',
-            'customer_name'  => 'required',
+            'customer_name'  => 'required|string|max:255',
             'customer_email' => 'required|email',
-            'customer_phone' => 'required',
+            'customer_phone' => 'required|string|max:20',
             'status'         => 'required',
         ]);
 
+        // 2. Ambil data event untuk harga
         $event = Event::findOrFail($request->event_id);
 
-        Transaction::create([
-            'event_id'        => $event->id,
-            'order_id'        => uniqid(),
-            'customer_name'   => $request->customer_name,
-            'customer_email'  => $request->customer_email,
-            'customer_phone'  => $request->customer_phone,
+        // 3. Gabungkan data untuk disimpan
+        $data = $validated;
+        $data['order_id']    = 'TRX-' . strtoupper(Str::random(8));
+        $data['total_price'] = $event->price + 5000; // Contoh harga + admin
 
-            // 🔥 AUTO TOTAL PRICE DARI EVENT
-            'total_price'     => $event->price,
+        // 4. Simpan ke database
+        $transaction = Transaction::create($data);
 
-            'status'          => $request->status ?? 'Pending',
-            'snap_token'      => null,
+        // 5. Redirect ke halaman tiket dengan ID yang baru dibuat
+        return redirect()->route('ticket.show', ['id' => $transaction->id]);
+    }
+
+    // =========================
+    // SHOW (Menampilkan Tiket)
+    // =========================
+    public function show($id)
+    {
+        $transaction = Transaction::with('event')->findOrFail($id);
+        return view('ticket', compact('transaction'));
+    }
+
+    // =========================
+    // EDIT
+    // =========================
+    public function edit(Transaction $transaction)
+    {
+        $events = Event::all();
+        return view('admin.transactions.edit', compact('transaction', 'events'));
+    }
+
+    // =========================
+    // UPDATE
+    // =========================
+    public function update(Request $request, Transaction $transaction)
+    {
+        $request->validate([
+            'customer_name'  => 'required|string|max:255',
+            'customer_email' => 'required|email',
+            'customer_phone' => 'required|string|max:20',
+            'status'         => 'required',
+            'total_price'    => 'required|numeric',
         ]);
 
+        $transaction->update($request->all());
+
         return redirect()->route('admin.transactions.index')
-            ->with('success', 'Transaksi berhasil ditambahkan');
+            ->with('success', 'Transaksi berhasil diupdate');
+    }
+
+    // =========================
+    // DESTROY
+    // =========================
+    public function destroy(Transaction $transaction)
+    {
+        $transaction->delete();
+        return redirect()->route('admin.transactions.index')
+            ->with('success', 'Transaksi berhasil dihapus');
     }
 }

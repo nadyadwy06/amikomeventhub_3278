@@ -80,122 +80,46 @@ function closeModal() {
 </script>
 
 <!-- Event Grid -->
+
 <section id="events" class="max-w-7xl mx-auto px-6 py-20">
 
     <h2 class="text-3xl font-bold mb-8">Event Terdekat</h2>
 
     <div class="grid md:grid-cols-3 gap-8">
 
-        <!-- Card -->
+        @forelse($events as $event)
         <div class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition">
-            <img src="{{ asset('assets/concert.png') }}" class="rounded-xl mb-4">
+            <img src="{{ asset('storage/' . $event->poster_path) }}" alt="{{ $event->title }}" class="w-full h-48 object-cover rounded-xl mb-4">
 
-            <h3 class="font-bold text-lg text-slate-800">Jazz Night 2024</h3>
+            <h3 class="font-bold text-lg text-slate-800">{{ $event->title }}</h3>
 
-            <!-- TANGGAL -->
-            <div class="flex items-center gap-2 text-sm text-slate-500 mt-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-500" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        d="M8 7V3m8 4V3M4 11h16M5 5h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/>
+        <div class="flex items-center gap-2 text-sm text-slate-500 mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3M4 11h16M5 5h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/>
                 </svg>
-                16 November 2024
+                {{ \Carbon\Carbon::parse($event->date)->format('d M Y') }}
             </div>
 
-            <!-- HARGA (PRICE TAG) -->
-            <div class="flex items-center gap-2 text-indigo-600 font-bold mt-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        d="M7 7h.01M7 3h5l7 7-5 5-7-7V3z"/>
+        <div class="flex items-center gap-2 text-indigo-600 font-bold mt-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                Rp 150.000
+                {{ $event->price > 0 ? 'Rp ' . number_format($event->price, 0, ',', '.') : 'Gratis' }}
             </div>
 
-            <a href="/event-detail"
+            <a href="{{ route('events.show', $event->id) }}"
                class="mt-4 inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition">
                 Lihat Detail
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 5l7 7-7 7"/>
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
             </a>
         </div>
-
-        <!-- Card -->
-        <div class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition">
-            <img src="{{ asset('assets/workshop.png') }}" class="rounded-xl mb-4">
-
-            <h3 class="font-bold text-lg text-slate-800">AI & Future</h3>
-
-            <!-- TANGGAL -->
-            <div class="flex items-center gap-2 text-sm text-slate-500 mt-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-500" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        d="M8 7V3m8 4V3M4 11h16M5 5h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/>
-                </svg>
-                26 October 2024
+        @empty
+            <div class="col-span-3 text-center py-10">
+                <p class="text-slate-500">Belum ada event yang tersedia saat ini. Silakan kembali lagi nanti.</p>
             </div>
-
-            <!-- HARGA -->
-            <div class="flex items-center gap-2 text-indigo-600 font-bold mt-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        d="M7 7h.01M7 3h5l7 7-5 5-7-7V3z"/>
-                </svg>
-                Rp 50.000
-            </div>
-
-            <a href="/event-detail"
-               class="mt-4 inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition">
-                Lihat Detail
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 5l7 7-7 7"/>
-                </svg>
-            </a>
-        </div>
-
-        <!-- Card -->
-        <div class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition">
-            <img src="{{ asset('assets/hackathon.png') }}" class="rounded-xl mb-4">
-
-            <h3 class="font-bold text-lg text-slate-800">Hackathon 2024</h3>
-
-            <!-- TANGGAL (SUDAH DISAMAKAN) -->
-            <div class="flex items-center gap-2 text-sm text-slate-500 mt-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-500" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        d="M8 7V3m8 4V3M4 11h16M5 5h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/>
-                </svg>
-                18 - 20 October
-            </div>
-
-            <!-- GRATIS -->
-            <div class="flex items-center gap-2 text-green-600 font-bold mt-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        d="M4 8a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 010 4v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2a2 2 0 010-4V8z"/>
-                </svg>
-                Gratis
-            </div>
-
-            <a href="/event-detail"
-               class="mt-4 inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold hover:bg-indigo-700 transition">
-                Lihat Detail
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 5l7 7-7 7"/>
-                </svg>
-            </a>
-        </div>
+        @endforelse
 
     </div>
 

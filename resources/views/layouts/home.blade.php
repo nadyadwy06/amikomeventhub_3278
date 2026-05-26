@@ -8,7 +8,7 @@
     <div class="max-w-6xl mx-auto px-6 text-center">
 
         <h1 class="text-5xl md:text-6xl font-extrabold text-slate-800 leading-tight mb-6">
-            Temukan Tiket Event Terbaik 🎉
+            Temukan Tiket Event Terbaik 
         </h1>
 
         <p class="text-lg text-slate-500 max-w-2xl mx-auto mb-10">

@@ -12,27 +12,27 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Ambil transaksi terbaru
-        $transactions = Transaction::latest()->take(5)->get();
+    // Ambil transaksi terbaru dengan relasi event
+    $transactions = Transaction::with('event')->latest()->take(5)->get(); 
 
-        // Total pendapatan
-        $totalRevenue = Transaction::sum('total_price');
+    // Total pendapatan (sum)
+    $totalRevenue = Transaction::where('status', 'success')->sum('total_price');
 
-        // Total tiket
-        $ticketSold = Transaction::count();
+    // Total tiket (count)
+    $ticketSold = Transaction::where('status', 'success')->count();
 
-        // Total event
-        $eventCount = Event::count();
+    // Total event
+    $eventCount = Event::count();
 
-        // Total pending
-        $pendingOrders = Transaction::where('status', 'Pending')->count();
+    // Total pending (menggunakan case-insensitive)
+    $pendingOrders = Transaction::whereRaw('LOWER(status) = ?', ['pending'])->count();
 
-        return view('admin.dashboard', compact(
-            'transactions',
-            'totalRevenue',
-            'ticketSold',
-            'eventCount',
-            'pendingOrders'
-        ));
-    }
+    return view('admin.dashboard', compact(
+        'transactions',
+        'totalRevenue',
+        'ticketSold',
+        'eventCount',
+        'pendingOrders'
+    ));
+}
 }
