@@ -1,97 +1,108 @@
-@extends('layouts.admin')
+    @extends('layouts.admin')
 
-@section('title', 'Tambah Transaksi')
+    @section('title', 'Tambah Transaksi')
 
-@section('content')
+    @section('content')
 
-<form action="{{ route('admin.transactions.store') }}"
-      method="POST"
-      class="space-y-5">
+    <form action="{{ route('admin.transactions.store') }}"
+        method="POST"
+        class="space-y-5 bg-white p-6 rounded-2xl border border-slate-200">
 
-    @csrf
+        @csrf
 
-    <!-- NAMA -->
-    <input type="text" name="customer_name"
-           placeholder="Nama"
-           class="w-full border rounded-xl px-4 py-3"
-           required>
+        <div>
+            <label class="block mb-1 font-semibold">Nama</label>
+            <input type="text" name="customer_name"
+                placeholder="Nama Lengkap"
+                class="w-full border rounded-xl px-4 py-3"
+                required>
+        </div>
 
-    <!-- EMAIL -->
-    <input type="email" name="customer_email"
-           placeholder="Email"
-           class="w-full border rounded-xl px-4 py-3"
-           required>
+        <div>
+            <label class="block mb-1 font-semibold">Email</label>
+            <input type="email" name="customer_email"
+                placeholder="Email"
+                class="w-full border rounded-xl px-4 py-3"
+                required>
+        </div>
 
-    <!-- EVENT -->
-    <select id="eventSelect"
-            name="event_id"
-            class="w-full border rounded-xl px-4 py-3"
-            required>
+        <div>
+            <label class="block mb-1 font-semibold">Nomor Telepon</label>
+            <input type="text" name="customer_phone"
+                placeholder="Contoh: 08123456789"
+                class="w-full border rounded-xl px-4 py-3"
+                required>
+        </div>
 
-        <option value="">Pilih Event</option>
+        <div>
+            <label class="block mb-1 font-semibold">Event</label>
+            <select id="eventSelect"
+                    name="event_id"
+                    class="w-full border rounded-xl px-4 py-3"
+                    required>
 
-        @foreach($events as $event)
-            <option value="{{ $event->id }}"
-                    data-price="{{ $event->price }}">
-                {{ $event->title }}
-            </option>
-        @endforeach
+                <option value="">Pilih Event</option>
 
-    </select>
+                @foreach($events as $event)
+                    <option value="{{ $event->id }}"
+                            data-price="{{ $event->price }}">
+                        {{ $event->title }}
+                    </option>
+                @endforeach
 
-    <!-- HARGA TAMPIL (READONLY) -->
-    <div>
-        <label class="block mb-2 font-semibold">
-            Harga Event
-        </label>
+            </select>
+        </div>
 
-        <input type="text"
-               id="priceDisplay"
-               class="w-full border rounded-xl px-4 py-3 bg-gray-100"
-               readonly
-               placeholder="Harga akan muncul otomatis">
-    </div>
+        <div>
+            <label class="block mb-2 font-semibold">
+                Harga Event
+            </label>
 
-    <!-- 🔥 HIDDEN INPUT UNTUK DATABASE -->
-    <input type="hidden" name="total_price" id="totalPrice">
+            <input type="text"
+                id="priceDisplay"
+                class="w-full border rounded-xl px-4 py-3 bg-gray-100"
+                readonly
+                placeholder="Harga akan muncul otomatis">
+        </div>
 
-    <!-- STATUS -->
-    <select name="status"
-            class="w-full border rounded-xl px-4 py-3">
+        <input type="hidden" name="total_price" id="totalPrice">
 
-        <option value="Pending">Pending</option>
-        <option value="Success">Success</option>
+        <div>
+            <label class="block mb-2 font-semibold">Status</label>
+            <select name="status"
+                    class="w-full border rounded-xl px-4 py-3">
 
-    </select>
+                <option value="Pending">Pending</option>
+                <option value="Success">Success</option>
 
-    <button type="submit"
-            class="px-6 py-3 bg-indigo-600 text-white rounded-xl">
+            </select>
+        </div>
 
-        Simpan
+        <button type="submit"
+                class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition">
+            Simpan Transaksi
+        </button>
 
-    </button>
+    </form>
 
-</form>
+    <script>
+    document.getElementById('eventSelect').addEventListener('change', function () {
 
-<!-- SCRIPT AUTO PRICE -->
-<script>
-document.getElementById('eventSelect').addEventListener('change', function () {
+        let selected = this.options[this.selectedIndex];
+        let price = selected.getAttribute('data-price');
 
-    let selected = this.options[this.selectedIndex];
-    let price = selected.getAttribute('data-price');
+        if (price) {
+            document.getElementById('priceDisplay').value =
+                'Rp ' + new Intl.NumberFormat('id-ID').format(price);
 
-    if (price) {
-        document.getElementById('priceDisplay').value =
-            'Rp ' + new Intl.NumberFormat('id-ID').format(price);
+            // 🔥 INI YANG KIRIM KE DATABASE
+            document.getElementById('totalPrice').value = price;
+        } else {
+            document.getElementById('priceDisplay').value = '';
+            document.getElementById('totalPrice').value = '';
+        }
 
-        // 🔥 INI YANG KIRIM KE DATABASE
-        document.getElementById('totalPrice').value = price;
-    } else {
-        document.getElementById('priceDisplay').value = '';
-        document.getElementById('totalPrice').value = '';
-    }
+    });
+    </script>
 
-});
-</script>
-
-@endsection
+    @endsection

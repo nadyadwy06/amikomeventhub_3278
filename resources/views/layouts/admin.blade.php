@@ -51,163 +51,86 @@
 
             <p class="text-[10px] font-bold uppercase tracking-widest text-indigo-400 mb-4 px-2">
                 Main Menu
-            </p>
+        </p>
 
-            <!-- Dashboard -->
-            <a href="{{ route('admin.dashboard') }}"
-               class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all duration-200
-               {{ request()->routeIs('admin.dashboard')
-                    ? 'bg-indigo-800 text-white shadow'
-                    : 'hover:bg-indigo-800 hover:text-white' }}">
+        <a href="{{ route('admin.dashboard') }}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all duration-200
+        {{ request()->routeIs('admin.dashboard') ? 'bg-indigo-800 text-white shadow' : 'hover:bg-indigo-800 hover:text-white' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+            Dashboard
+        </a>
 
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="w-5 h-5"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     stroke="currentColor">
+        <a href="{{ route('admin.categories.index') }}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all duration-200
+        {{ request()->routeIs('admin.categories.*') ? 'bg-indigo-800 text-white shadow' : 'hover:bg-indigo-800 hover:text-white' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+            Kategori
+        </a>
 
-                    <path stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M3 12l2-2m0 0l7-7 7 7m-9 2v8m0 0H5a2 2 0 01-2-2v-6m16 6a2 2 0 01-2 2h-4"/>
-                </svg>
+        <a href="{{ route('admin.events.index') }}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all duration-200
+        {{ request()->routeIs('admin.events.*') ? 'bg-indigo-800 text-white shadow' : 'hover:bg-indigo-800 hover:text-white' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Kelola Event
+        </a>
+        
+        <a href="{{ route('admin.partners.index') }}"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all duration-200
+            {{ request()->routeIs('admin.partners.*') ? 'bg-indigo-800 text-white shadow' : 'hover:bg-indigo-800 hover:text-white' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            Kelola Partner
+        </a>
 
-                Dashboard
-            </a>
+        <a href="{{ route('admin.transactions.index') }}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all duration-200
+        {{ request()->routeIs('admin.transactions.*') ? 'bg-indigo-800 text-white shadow' : 'hover:bg-indigo-800 hover:text-white' }}">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Laporan Transaksi
+        </a>
+    </nav>
 
-            <!-- Events -->
-            <a href="{{ route('admin.events.index') }}"
-               class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all duration-200
-               {{ request()->routeIs('admin.events.*')
-                    ? 'bg-indigo-800 text-white shadow'
-                    : 'hover:bg-indigo-800 hover:text-white' }}">
-
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="w-5 h-5"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     stroke="currentColor">
-
-                    <path stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M8 7V3m8 4V3m-9 8h10m-11 9h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z"/>
-                </svg>
-
-                Kelola Event
-            </a>
-
-            <!-- Transactions -->
-            <a href="{{ route('admin.transactions.index') }}"
-               class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all duration-200
-               {{ request()->routeIs('admin.transactions.*')
-                    ? 'bg-indigo-800 text-white shadow'
-                    : 'hover:bg-indigo-800 hover:text-white' }}">
-
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="w-5 h-5"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     stroke="currentColor">
-
-                    <path stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M12 8c-1.657 0-3 .672-3 1.5S10.343 11 12 11s3-.672 3-1.5S13.657 8 12 8zm0 0V6m0 12v-2m8-4h-2M6 12H4"/>
-                </svg>
-
-                Laporan Transaksi
-            </a>
-
-            <!-- Categories -->
-            <a href="{{ route('admin.categories.index') }}"
-               class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-all duration-200
-               {{ request()->routeIs('admin.categories.*')
-                    ? 'bg-indigo-800 text-white shadow'
-                    : 'hover:bg-indigo-800 hover:text-white' }}">
-
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="w-5 h-5"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     stroke="currentColor">
-
-                    <path stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M7 7h.01M7 3h5l7 7-5 5-7-7V3z"/>
-                </svg>
-
-                Kategori
-            </a>
-
-        </nav>
-
-        <!-- FOOTER -->
-        <div class="pt-6 border-t border-indigo-800">
-
-            <a href="/"
-               class="w-full flex items-center gap-3 px-4 py-3 text-indigo-300 hover:text-white hover:bg-indigo-800 rounded-xl transition-all duration-200 font-medium">
-
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="w-5 h-5"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     stroke="currentColor">
-
-                    <path stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10V7m0 0a4 4 0 10-4 4"/>
-                </svg>
-
-                Keluar
-            </a>
-
-        </div>
+    <div class="pt-6 border-t border-indigo-800">
+        <a href="/"
+        class="w-full flex items-center gap-3 px-4 py-3 text-indigo-300 hover:text-white hover:bg-indigo-800 rounded-xl transition-all duration-200 font-medium">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 003-3V7a3 3 0 00-3-3H7a3 3 0 00-3 3v10a3 3 0 003 3h3"/></svg>
+            Keluar
+        </a>
+    </div>
 
     </aside>
 
     <!-- MAIN CONTENT -->
-    <main class="flex-1 p-6 md:p-10 overflow-y-auto">
+   <main class="flex-1 p-6 md:p-10 overflow-y-auto">
 
-        <!-- HEADER -->
-        <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-
+        <header class="flex items-center justify-between gap-4 mb-8">
+            
             <div>
                 <h1 class="text-3xl font-bold text-slate-800">
-                    @yield('title', 'Dashboard')
+                    @yield('title') 
                 </h1>
-
+                
                 <p class="text-sm text-slate-500 mt-1">
                     Selamat datang kembali 👋
                 </p>
             </div>
-
-            <!-- USER -->
-            <div class="flex items-center gap-4">
-
-                <div class="text-right hidden sm:block">
-
+    
+        <div class="flex items-center gap-4">
+            <div class="text-right hidden sm:block">
                     <p class="font-semibold text-slate-800">
                         {{ Auth::check() ? Auth::user()->name : 'Admin' }}
                     </p>
-
+                
                     <p class="text-xs text-slate-400">
                         Penyelenggara
                     </p>
-
+                
                 </div>
-
+                
                 <div class="w-11 h-11 bg-white rounded-xl shadow border overflow-hidden">
-
-                    <img
-                        src="https://ui-avatars.com/api/?name={{ urlencode(Auth::check() ? Auth::user()->name : 'Admin') }}&background=6366f1&color=fff"
-                        alt="Avatar"
-                        class="w-full h-full object-cover">
-
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::check() ? Auth::user()->name : 'Admin') }}&background=6366f1&color=fff"
+                         alt="Avatar" class="w-full h-full object-cover">
                 </div>
-
+            
             </div>
 
         </header>
