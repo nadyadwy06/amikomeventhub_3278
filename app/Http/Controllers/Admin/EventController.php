@@ -102,6 +102,12 @@ class EventController extends Controller
         return redirect()->route('admin.events.index')
             ->with('success', 'Event berhasil diupdate');
     }
+    public function edit($id)
+    {
+        $event = Event::findOrFail($id);
+        $categories = Category::all(); // Tambahkan agar dropdown kategori muncul
+        return view('admin.events.edit', compact('event', 'categories'));
+    }
 
     // DELETE
     public function destroy($id)
