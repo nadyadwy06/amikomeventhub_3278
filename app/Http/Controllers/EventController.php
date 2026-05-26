@@ -25,4 +25,9 @@ class EventController extends Controller
 
         return view('checkout', compact('event'));
     }
+    public function edit(Event $event) 
+{
+    // Pastikan $event berhasil ditemukan
+    return view('admin.events.edit', compact('event'));
+}
     }
