@@ -7,6 +7,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 
 // Admin Controllers
+use App\Http\Controllers\Admin\AuthController; 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController as AdminEventController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -35,19 +36,33 @@ Route::get('/event/{event}', [EventController::class, 'show'])->name('events.sho
 Route::get('/checkout/{event}', [EventController::class, 'checkout'])->name('checkout');
 Route::get('/ticket/{id}', [TransactionController::class, 'show'])->name('ticket.show');
 
+Route::get('/login', function () { 
+ return redirect()->route('admin.login'); 
+})->name('login'); 
+
 /*
 |--------------------------------------------------------------------------
-| ADMIN AREA (Diringkas agar tidak 404 karena salah penamaan)
+| Admin Area 
 |--------------------------------------------------------------------------
 */
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Menggunakan resource akan otomatis membuatkan route:
-    // admin.events.index, .create, .store, .edit, .update, .destroy
-    Route::resource('events', AdminEventController::class);
-    Route::resource('transactions', TransactionController::class);
-    Route::resource('categories', CategoryController::class);
-    Route::resource('partners', PartnerController::class);
     
+    // Rute Login (Bebas akses)
+    Route::get('login', [AuthController::class, 'showLogin'])->name('login'); 
+    Route::post('login', [AuthController::class, 'login'])->name('login.post'); 
+
+    // Rute yang Dilindungi (Middleware Auth & Admin)
+    Route::middleware(['auth', 'admin'])->group(function () { 
+        
+        // Pindahkan logout ke dalam sini agar hanya bisa diakses saat user login
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout'); 
+        
+        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard'); 
+
+        Route::resource('events', AdminEventController::class);
+        Route::resource('transactions', TransactionController::class);
+        Route::resource('categories', CategoryController::class);
+        Route::resource('partners', PartnerController::class);
+    }); 
 });
