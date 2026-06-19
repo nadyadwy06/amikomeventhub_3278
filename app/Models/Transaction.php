@@ -15,7 +15,8 @@ class Transaction extends Model
         'customer_email', 
         'customer_phone', 
         'total_price', 
-        'status'
+        'status',
+        'snap_token'
     ];
 
     // RELASI KE EVENT

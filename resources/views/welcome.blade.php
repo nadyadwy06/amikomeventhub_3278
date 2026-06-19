@@ -88,10 +88,15 @@ function closeModal() {
     <div class="grid md:grid-cols-3 gap-8">
 
         @forelse($events as $event)
-        <div class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition">
-            <img src="{{ asset('storage/' . $event->poster_path) }}" alt="{{ $event->title }}" class="w-full h-48 object-cover rounded-xl mb-4">
+        <div class="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition flex flex-col h-full">
+    
+    <div class="w-full aspect-square bg-slate-100 rounded-2xl mb-4 overflow-hidden flex items-center justify-center">
+    <img src="{{ asset('storage/' . $event->poster_path) }}" alt="{{ $event->title }}" class="w-full h-full object-cover">
+</div>
 
-            <h3 class="font-bold text-lg text-slate-800">{{ $event->title }}</h3>
+    <div class="flex flex-col flex-grow">
+        <h3 class="font-bold text-lg text-slate-800 mb-2">{{ $event->title }}</h3>
+        </div>
 
         <div class="flex items-center gap-2 text-sm text-slate-500 mt-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
