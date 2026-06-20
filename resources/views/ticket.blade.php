@@ -54,16 +54,16 @@
                     <div class="border-t border-dashed border-slate-300"></div>
                 </div>
 
-                <div class="text-center">
-                    <div class="w-44 h-44 mx-auto flex items-center justify-center border border-indigo-100 rounded-2xl p-2 bg-white shadow-sm overflow-hidden transition-all hover:scale-105">
-                        {!! (new \SimpleSoftwareIO\QrCode\Generator)->size(176)->generate($transaction->order_id) !!}
-                    </div>
-                    <p class="font-mono text-sm font-bold text-slate-800 mt-4 tracking-widest">
-                        {{ $transaction->order_id ?? 'TKT-00000000' }}
-                    </p>
+               <div class="text-center">
+                <div class="w-44 h-44 mx-auto border border-indigo-100 rounded-2xl p-2 bg-white shadow-sm overflow-hidden">
+                    <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl={{ urlencode($transaction->order_id) }}&choe=UTF-8" 
+                        alt="QR Code" class="w-full h-full">
                 </div>
+                <span class="font-mono text-sm font-bold text-slate-800 mt-2 block tracking-widest">
+                    {{ $transaction->order_id ?? 'TKT-00000000' }}
+                </span>
             </div>
-
+            
             <div class="p-6 bg-slate-50 border-t border-dashed">
                 <button onclick="window.print()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg transition transform hover:-translate-y-0.5">
                     Cetak / Simpan PDF
