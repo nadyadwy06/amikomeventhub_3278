@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\CheckoutController;
 
 // Admin Controllers
 use App\Http\Controllers\Admin\AuthController; 
@@ -33,7 +34,13 @@ Route::view('/kontak', 'contact')->name('kontak');
 */
 // Pastikan parameter di sini {event} agar sesuai dengan Controller Model Binding
 Route::get('/event/{event}', [EventController::class, 'show'])->name('events.show');
-Route::get('/checkout/{event}', [EventController::class, 'checkout'])->name('checkout');
+// 2. Route Checkout (Bisa diakses publik/guest tanpa login)
+Route::get('/checkout/{event}', [CheckoutController::class, 'create'])->name('checkout.create');
+Route::post('/checkout/{event}', [CheckoutController::class, 'store'])->name('checkout.store');
+
+// 3. Route Pembayaran Midtrans & Halaman Sukses[cite: 1]
+Route::get('/payment/{order_id}', [CheckoutController::class, 'payment'])->name('checkout.payment');
+Route::get('/success/{order_id}', [CheckoutController::class, 'success'])->name('checkout.success');
 Route::get('/ticket/{id}', [TransactionController::class, 'show'])->name('ticket.show');
 
 Route::get('/login', function () { 

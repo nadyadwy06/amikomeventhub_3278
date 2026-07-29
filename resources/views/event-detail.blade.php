@@ -79,7 +79,7 @@
 
                
                 <div>
-                    <a href="{{ route('checkout', $event->id) }}"
+                    <a href="{{ route('checkout.create', $event->id) }}"
                         class="px-10 py-5 bg-white text-indigo-600 rounded-2xl font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 transition">
                         Pesan Sekarang
                     </a>

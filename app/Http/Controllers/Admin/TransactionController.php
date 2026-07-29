@@ -13,30 +13,23 @@ class TransactionController extends Controller
     // =========================
     // INDEX
     // =========================
-    public function index(Request $request)
+        public function index()
     {
-        $transactions = Transaction::with('event')
-            ->when($request->search, function ($q) use ($request) {
-                $q->where('customer_name', 'like', '%' . $request->search . '%')
-                  ->orWhere('order_id', 'like', '%' . $request->search . '%');
-            })
-            ->when($request->status, function ($q) use ($request) {
-                $q->where('status', $request->status);
-            })
-            ->latest()
-            ->get();
-
+        // Mengambil transaksi terbaru dengan pembatasan 20 baris/halaman
+        $transactions = Transaction::with('event')->latest()->paginate(20);
         return view('admin.transactions.index', compact('transactions'));
+    }
 
-        {
-        // Menghitung statistik
-        $totalRevenue = Transaction::where('status', 'success')->sum('total_price');
-        $ticketSold = Transaction::where('status', 'success')->count();
-        $eventCount = Event::count();
-        $pendingOrders = Transaction::where('status', 'pending')->count();
-
-        // Mengambil 5 transaksi terakhir
-        $transactions = Transaction::with('event')->latest()->take(5)->get();
+    // =========================================================================
+    // DASHBOARD (Statistik Dashboard Admin)
+    // =========================================================================
+    public function dashboard()
+    {
+            $totalRevenue = Transaction::where('status', 'success')->sum('total_price');
+            $ticketSold = Transaction::where('status', 'success')->count();
+            $eventCount = Event::count();
+            $pendingOrders = Transaction::where('status', 'pending')->count();
+            $transactions = Transaction::with('event')->latest()->take(5)->get();
 
         return view('admin.dashboard', compact(
             'totalRevenue', 
@@ -46,8 +39,8 @@ class TransactionController extends Controller
             'transactions'
         ));
     }
-    }
 
+    
     // =========================
     // CREATE
     // =========================
