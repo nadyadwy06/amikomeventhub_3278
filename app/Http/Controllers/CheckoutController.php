@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Event;        
 use App\Models\Transaction;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use Midtrans\Config;
 use Midtrans\Snap;
 
@@ -13,12 +14,10 @@ class CheckoutController extends Controller
 {
     public function create(Event $event)
     {
-        // Mengambil daftar kategori untuk keperluan menu footer
-     $categories = \App\Models\Category::all();
-
-     return view('checkout.create', compact('event','categories'));
+        $categories = \App\Models\Category::all();
+        return view('checkout.create', compact('event','categories'));
     }
-    // Method untuk menampilkan halaman Jendela Pembayaran (Payment UI)
+
     public function payment($order_id)
     {
         $categories = \App\Models\Category::all();
@@ -41,12 +40,34 @@ class CheckoutController extends Controller
             return back()->with('error', 'Mohon maaf, tiket untuk acara ini sudah habis.');
         }
 
-        // 3. Generate Kode TRX (Unik) & Total Harga
+        // 3. Generate Kode TRX (Unik)
         $orderId = 'TRX-' . time() . '-' . Str::random(5);
-        $totalPrice = (int) ($event->price + 5000); // Dipastikan bertipe integer
+        
+        // --- LOGIKA BYPASS ACARA GRATIS (FREE EVENTS / Rp 0) ---
+        if ($event->price == 0) {
+            $transaction = Transaction::create([
+                'user_id'        => auth()->id(), // Ditambahkan agar terbaca di sistem Review
+                'event_id'       => $event->id,
+                'order_id'       => $orderId,
+                'customer_name'  => $request->customer_name,
+                'customer_email' => $request->customer_email,
+                'customer_phone' => $request->customer_phone,
+                'total_price'    => 0,
+                'status'         => 'success', 
+            ]);
 
-        // 4. Merekam Transaksi ke Database
+            // Kurangi stok tiket secara real-time
+            $event->decrement('stock');
+
+            return redirect()->route('checkout.success', $transaction->order_id)
+                             ->with('success', 'Pendaftaran Berhasil! Tiket Anda telah diterbitkan.');
+        }
+
+        // 4. Jika Event Berbayar (> Rp 0)
+        $totalPrice = (int) ($event->price + 5000); 
+
         $transaction = Transaction::create([
+            'user_id'        => auth()->id(), // Ditambahkan agar terbaca di sistem Review
             'event_id'       => $event->id,
             'order_id'       => $orderId,
             'customer_name'  => $request->customer_name,
@@ -62,11 +83,11 @@ class CheckoutController extends Controller
         Config::$isSanitized = config('midtrans.is_sanitized', true);
         Config::$is3ds = config('midtrans.is_3ds', true);
 
-        // Susun Paket Array Data Transaksi
+
         $params = [
             'transaction_details' => [
                 'order_id'     => $transaction->order_id,
-                'gross_amount' => (int) $transaction->total_price, // Wajib Integer
+                'gross_amount' => (int) $transaction->total_price,
             ],
             'customer_details' => [
                 'first_name' => $transaction->customer_name,
@@ -76,36 +97,43 @@ class CheckoutController extends Controller
         ];
 
         try {
-            // Generate Snap Token
-            $snapToken = Snap::getSnapToken($params);
-
-            // Simpan snap_token ke database
+            
+        $snapToken = Snap::getSnapToken($params);
+            
             $transaction->update(['snap_token' => $snapToken]);
 
-            // Redirect ke route payment
+            
             return redirect()->route('checkout.payment', $transaction->order_id);
 
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal memproses pembayaran jaringan: ' . $e->getMessage());
         }
     }
-    // Method untuk menangani halaman sukses setelah pembayaran
+
     public function success($order_id)
     {
         $categories = \App\Models\Category::all();
-        $transaction = Transaction::where('order_id', $order_id)->firstOrFail();
+        $transaction = Transaction::with('event')->where('order_id', $order_id)->firstOrFail();
 
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = config('midtrans.is_production');
+        // Jika transaksi dari event berbayar, verifikasi status Midtrans
+        if ($transaction->total_price > 0 && $transaction->status !== 'success') {
+            Config::$serverKey = config('midtrans.server_key');
+            Config::$isProduction = config('midtrans.is_production');
 
-        try {
-            $midtransStatus = \Midtrans\Transaction::status($order_id);
+            try {
+                $midtransStatus = \Midtrans\Transaction::status($order_id);
 
-            if (in_array($midtransStatus->transaction_status, ['capture', 'settlement'])) {
-                $transaction->update(['status' => 'success']);
+                if (in_array($midtransStatus->transaction_status, ['capture', 'settlement'])) {
+                    $transaction->update(['status' => 'success']);
+                    
+                    // Kurangi stok tiket setelah pembayaran berbayar terkonfirmasi
+                    if ($transaction->event) {
+                        $transaction->event->decrement('stock');
+                    }
+                }
+            } catch (\Exception $e) {
+                return redirect()->route('home')->with('error', 'Transaksi tidak ditemukan atau gagal diproses.');
             }
-        } catch (\Exception $e) {
-            return redirect()->route('home')->with('error', 'Transaksi tidak ditemukan atau gagal diproses.');
         }
 
         return view('checkout.success', compact('transaction', 'categories'));

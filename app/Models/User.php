@@ -23,6 +23,8 @@ class User extends Authenticatable
         'email',
         'role',
         'password',
+        'google_id', // Ditambahkan untuk fitur SSO Google
+        'avatar',    // Ditambahkan untuk menyimpan foto profil Google SSO
     ];
 
     /**
@@ -46,5 +48,28 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    /**
+     * Relasi jika User bertindak sebagai Organizer/HIMA (Memiliki Banyak Event)
+     */
+    public function events()
+    {
+        return $this->hasMany(Event::class, 'organizer_id');
+    }
+
+    /**
+     * Relasi Ulasan yang ditulis oleh User ini (sebagai Pembeli Tiket)
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'user_id');
+    }
+
+    /**
+     * Relasi Ulasan yang diterima oleh User ini (sebagai Organizer/HIMA)
+     */
+    public function organizerReviews()
+    {
+        return $this->hasMany(Review::class, 'organizer_id');
     }
 }
