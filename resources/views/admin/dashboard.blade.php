@@ -1,234 +1,105 @@
-@extends('layouts.admin')
+    @extends('layouts.admin')
+    @section('title', 'Admin Dashboard')
+    @section('page_title', 'Dashboard Ringkasan')
 
-@section('title', 'Dashboard')
-
-@section('content')
-
-<!-- SEARCH BAR -->
-<div class="mb-6">
-    <div class="relative w-full md:w-96">
-
-        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-        </span>
-
-        <input type="text"
-            placeholder="Cari transaksi atau event..."
-            class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm">
-
-    </div>
-</div>
-
-<!-- STATISTICS -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-
-    <!-- TOTAL PENDAPATAN -->
-    <div class="bg-white p-6 rounded-3xl shadow-sm border flex items-center gap-4">
-
-        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-indigo-100 text-indigo-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 8c-2 0-3 1-3 2s1 2 3 2 3 1 3 2-1 2-3 2m0-10v10"/>
-            </svg>
+    @section('content')
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <p class="text-slate-400 text-sm font-bold uppercase mb-1">Total Pendapatan</p>
+            <h3 class="text-2xl font-black">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</h3>
         </div>
 
-        <div>
-            <p class="text-xs text-slate-400 font-semibold uppercase">
-                Total Pendapatan
-            </p>
-
-            <h3 class="text-2xl font-black text-slate-800">
-                Rp {{ number_format($totalRevenue, 0, ',', '.') }}
-            </h3>
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+            <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+                </svg>
+            </div>
+            <p class="text-slate-400 text-sm font-bold uppercase mb-1">Tiket Terjual</p>
+            <h3 class="text-2xl font-black">{{ number_format($ticketsSold, 0, ',', '.') }}</h3>
         </div>
 
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+            <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <p class="text-slate-400 text-sm font-bold uppercase mb-1">Event Aktif</p>
+            <h3 class="text-2xl font-black">{{ $activeEvents }} Event</h3>
+        </div>
+
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+            <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <p class="text-slate-400 text-sm font-bold uppercase mb-1">Pesanan Pending</p>
+            <h3 class="text-2xl font-black">{{ $pendingOrders }} Pesanan</h3>
+        </div>
+        
     </div>
 
-    <!-- TIKET -->
-    <div class="bg-white p-6 rounded-3xl shadow-sm border flex items-center gap-4">
-
-        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-green-100 text-green-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M4 7h16v10H4zM8 7v10M16 7v10"/>
-            </svg>
+    <!-- Latest Sales Table -->
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="p-8 border-b flex justify-between items-center">
+            <h3 class="font-black text-xl">Transaksi Terakhir</h3>
+            <a href="{{ route('admin.transactions.index') }}" class="text-indigo-600 font-bold hover:underline">Lihat Semua</a>
         </div>
 
-        <div>
-            <p class="text-xs text-slate-400 font-semibold uppercase">
-                Tiket Terjual
-            </p>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] font-black tracking-widest">
+                    <tr>
+                        <th class="px-8 py-4 w-1/4">Tgl Transaksi</th>
+                        <th class="px-8 py-4 w-1/4">Pembeli</th>
+                        <th class="px-8 py-4 w-1/4">Event</th>
+                        <th class="px-8 py-4 w-[10%]">Status</th>
+                        <th class="px-8 py-4 text-right">Total</th>
+                    </tr>
 
-            <h3 class="text-2xl font-black text-slate-800">
-                {{ $ticketSold }}
-            </h3>
-        </div>
+                </thead>
 
-    </div>
+                <tbody class="divide-y border-t">
+                    @forelse($recentTransactions as $trx)
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="px-8 py-6 text-sm text-slate-600 max-w-xs break-all">
+                            {{ $trx->created_at->format('d M y - H:i') }}<br>
+                            <span class="text-xs text-slate-400">{{ $trx->order_id }}</span>
+                        </td>
+                        <td class="px-8 py-6">
+                            <p class="font-bold uppercase tracking-wide text-sm truncate max-w-[150px]">{{ $trx->customer_name }}</p>
+                            <p class="text-xs text-slate-400 truncate max-w-[150px]">{{ $trx->customer_email }}</p>
+                        </td>
+                        <td class="px-8 py-6 font-medium text-slate-600 max-w-xs truncate">{{ $trx->event->title ?? '-' }}</td>
+                        <td class="px-8 py-6 whitespace-nowrap">
+                            @if($trx->status === 'settlement' || $trx->status === 'success')
+                                <span class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold uppercase">Success</span>
+                            @elseif($trx->status === 'pending')
+                                <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs font-bold uppercase">Pending</span>
+                            @else
+                                <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-lg text-xs font-bold uppercase">{{ $trx->status }}</span>
+                            @endif
+                        </td>
+                        <td class="px-8 py-6 font-black text-indigo-600 whitespace-nowrap text-right">Rp {{ number_format($trx->total_price, 0, ',', '.') }}</td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="px-8 py-10 text-center text-slate-500">Belum ada transaksi</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
 
-    <!-- EVENT -->
-    <div class="bg-white p-6 rounded-3xl shadow-sm border flex items-center gap-4">
-
-        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-orange-100 text-orange-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M8 7V3m8 4V3M4 11h16M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-        </div>
-
-        <div>
-            <p class="text-xs text-slate-400 font-semibold uppercase">
-                Event Aktif
-            </p>
-
-            <h3 class="text-2xl font-black text-slate-800">
-                {{ $eventCount }} Event
-            </h3>
-        </div>
-
-    </div>
-
-    <!-- PENDING -->
-    <div class="bg-white p-6 rounded-3xl shadow-sm border flex items-center gap-4">
-
-        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-rose-100 text-rose-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 8v4l3 3M12 2a10 10 0 100 20 10 10 0 000-20z"/>
-            </svg>
-        </div>
-
-        <div>
-            <p class="text-xs text-slate-400 font-semibold uppercase">
-                Pesanan Pending
-            </p>
-
-            <h3 class="text-2xl font-black text-slate-800">
-                {{ $pendingOrders }}
-            </h3>
         </div>
 
     </div>
 
-</div>
-
-<!-- TRANSAKSI -->
-<div class="bg-white rounded-2xl shadow-sm border overflow-hidden">
-
-    <!-- HEADER -->
-    <div class="flex justify-between items-center px-6 py-4 border-b">
-
-        <h2 class="font-semibold text-slate-800 flex items-center gap-2">
-
-            <svg class="w-5 h-5 text-indigo-600"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24">
-
-                <path stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M17 9V7a4 4 0 00-8 0v2M5 9h14l-1 10H6L5 9z"/>
-            </svg>
-
-            Transaksi Terakhir
-        </h2>
-
-        <a href="/admin/transactions"
-            class="flex items-center gap-1 text-indigo-600 text-sm font-semibold hover:underline">
-
-            Lihat Semua
-
-            <svg class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24">
-
-                <path stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M9 5l7 7-7 7"/>
-            </svg>
-
-        </a>
-
-    </div>
-
-    <!-- TABLE -->
-    <div class="overflow-x-auto">
-
-        <table class="w-full text-sm">
-
-            <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
-
-                <tr>
-                    <th class="px-6 py-3 text-left">Pembeli</th>
-                    <th class="px-6 py-3 text-left">Event</th>
-                    <th class="px-6 py-3 text-left">Status</th>
-                    <th class="px-6 py-3 text-left">Total</th>
-                </tr>
-
-            </thead>
-
-            <tbody class="divide-y">
-            @forelse($transactions as $transaction)
-            <tr class="hover:bg-slate-50 transition">
-                
-                <td class="px-6 py-4 font-medium">
-                    {{ $transaction->customer_name }}
-                </td>
-
-                <td class="px-6 py-4 text-slate-500">
-                    {{ $transaction->event->title ?? 'Event Tidak Ditemukan' }}
-                </td>
-
-                <td class="px-6 py-4">
-                    @if(strtolower($transaction->status) == 'success')
-                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
-                            Success
-                        </span>
-                    @elseif(strtolower($transaction->status) == 'pending')
-                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-700">
-                            Pending
-                        </span>
-                    @else
-                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-700">
-                            {{ $transaction->status }}
-                        </span>
-                    @endif
-                </td>
-
-                <td class="px-6 py-4 font-semibold text-indigo-600">
-                    Rp {{ number_format($transaction->total_price, 0, ',', '.') }}
-                </td>
-
-            </tr>
-            @empty
-            <tr>
-                <td colspan="4" class="px-6 py-10 text-center text-slate-400">
-                    Belum ada transaksi
-                </td>
-            </tr>
-            @endforelse
-        </tbody>
-
-        </table>
-
-    </div>
-
-</div>
-
-@endsection
+    @endsection

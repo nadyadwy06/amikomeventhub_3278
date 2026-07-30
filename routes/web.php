@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\MidtransWebhookController;
 
 // Admin Controllers
 use App\Http\Controllers\Admin\AuthController; 
@@ -42,6 +43,7 @@ Route::post('/checkout/{event}', [CheckoutController::class, 'store'])->name('ch
 Route::get('/payment/{order_id}', [CheckoutController::class, 'payment'])->name('checkout.payment');
 Route::get('/success/{order_id}', [CheckoutController::class, 'success'])->name('checkout.success');
 Route::get('/ticket/{id}', [TransactionController::class, 'show'])->name('ticket.show');
+Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransWebhookController::class, 'handle']);
 
 Route::get('/login', function () { 
  return redirect()->route('admin.login'); 
