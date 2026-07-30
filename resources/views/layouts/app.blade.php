@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
 
+    <!-- Meta Konfigurasi PWA (Progressive Web App) -->
+    <link rel="manifest" href="{{ asset('manifest.json') }}">
+    <meta name="theme-color" content="#4f46e5">
+    <link rel="apple-touch-icon" href="{{ asset('favicon.ico') }}">
+
     <script src="https://cdn.tailwindcss.com"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
@@ -21,6 +26,19 @@
             backdrop-filter: blur(10px);
         }
     </style>
+
+    <!-- Script Pendaftaran Service Worker PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('PWA ServiceWorker registered successfully:', registration.scope);
+                }, function(err) {
+                    console.log('PWA ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+    </script>
 </head>
 
 <body class="bg-slate-50 text-slate-900 flex flex-col min-h-screen">
@@ -62,28 +80,26 @@
 
 
     <div class="bg-slate-100/90 border-t border-slate-200 py-14 px-6 mt-24">
-    <div class="max-w-7xl mx-auto text-center">
-        <h2 class="text-xl md:text-2xl font-bold tracking-widest text-slate-400 uppercase">
-            Partner & Sponsor
-        </h2>
-        <p class="text-xs text-slate-400/80 mt-1">
-            Supported by excellent institutions and corporations
-        </p>
-        
-        <div class="mt-10 flex flex-wrap justify-center items-start gap-12 md:gap-24">
-            @forelse($partners as $partner)
-                <div class="flex flex-col items-center gap-3">
-                    <img src="{{ asset('storage/' . $partner->logo) }}" alt="{{ $partner->name }}" class="h-16 w-auto object-contain">
-                    <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">{{ $partner->name }}</span>
-                </div>
-            @empty
-                <p class="text-sm text-slate-400">Belum ada partner atau sponsor terdaftar.</p>
-            @endforelse
-        </div>
+        <div class="max-w-7xl mx-auto text-center">
+            <h2 class="text-xl md:text-2xl font-bold tracking-widest text-slate-400 uppercase">
+                Partner & Sponsor
+            </h2>
+            <p class="text-xs text-slate-400/80 mt-1">
+                Supported by excellent institutions and corporations
+            </p>
             
+            <div class="mt-10 flex flex-wrap justify-center items-start gap-12 md:gap-24">
+                @forelse($partners as $partner)
+                    <div class="flex flex-col items-center gap-3">
+                        <img src="{{ asset('storage/' . $partner->logo) }}" alt="{{ $partner->name }}" class="h-16 w-auto object-contain">
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">{{ $partner->name }}</span>
+                    </div>
+                @empty
+                    <p class="text-sm text-slate-400">Belum ada partner atau sponsor terdaftar.</p>
+                @endforelse
+            </div>
         </div>
     </div>
-</div>
 
 
     <footer class="bg-indigo-900 text-indigo-100 py-16 px-6 border-t border-indigo-950">
@@ -126,6 +142,7 @@
                     </li>
                 </ul>
             </div>
+        </div>
     </footer>
 
 
